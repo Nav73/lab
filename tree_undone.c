@@ -1,33 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-struct node* root = NULL;
-
 struct node{
-  int data;
-  struct node* left=NULL;
-  struct node* right=NULL;
+    int data;
+    struct node* left;
+    struct node* right;
 };
-void createTree(struct node* tree, int data){
-    if(tree==NULL){
-        root = malloc(sizeof(struct node));
-        printf("Enter the value of data in root node");
-        tree->data=data;
-    return;
+//building the tree
+struct node* buildTree(struct node* root) {
+    printf("Enter the data: ");
+    int data;
+    scanf("%d",&data);
+    root = (struct node*) malloc(sizeof(struct node));
+    root->data = data;
+    if(data == -1) {
+        return NULL;
     }
-   if(data<tree->data){
-        createTree(tree->left,data);
-   }
-   else{
-       createTree(tree->right,data);
-   }
+    printf("Enter data for inserting in left of %d \n",data);
+    root->left = buildTree(root->left);
+    printf("Enter data for inserting in right of %d \n",data);
+    root->right = buildTree(root->right);
+    return root;
 }
-int main()
-{
-  struct node* tree = root;
-  createTree(tree,1);
-  createTree(tree,2);
-  createTree(tree,3);
-  createTree(tree,4);
-return 0;
+//traversing the tree
+void inorder(struct node* root) {
+    //base case
+    if(root == NULL) {
+        return ;
+    }
+    inorder(root->left);
+    printf("%d ",root-> data);
+    inorder(root->right);
+}
+int main() {
+    struct node* root;
+    root = buildTree(root);
+    //1 3 7 -1 -1 11 -1 -1 5 17 -1 -1 -1 
+    inorder(root);
+    return 0;
 }
