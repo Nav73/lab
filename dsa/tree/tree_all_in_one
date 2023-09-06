@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for a BST node
+struct Tree {
+    int data;
+    struct Tree* left;
+    struct Tree* right;
+};
+
+// Function to create a new BST node
+struct Tree* createNode(int data) {
+    struct Tree* newNode = (struct Tree*)malloc(sizeof(struct Tree));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a new node into the BST
+struct Tree* insert(struct Tree* root, int data) {
+    if (root == NULL) {
+        return createNode(data);
+    }
+
+    if (data < root->data) {
+        root->left = insert(root->left, data);
+    } else if (data > root->data) {
+        root->right = insert(root->right, data);
+    }
+
+    return root;
+}
+
+// Function for inorder traversal
+void inorder(struct Tree* root) {
+    if (root == NULL) {
+        return;
+    }
+    inorder(root->left);
+    printf("%d ", root->data);
+    inorder(root->right);
+}
+
+// Function for preorder traversal
+void preorder(struct Tree* root) {
+    if (root == NULL) {
+        return;
+    }
+    printf("%d ", root->data);
+    preorder(root->left);
+    preorder(root->right);
+}
+
+// Function for postorder traversal
+void postorder(struct Tree* root) {
+    if (root == NULL) {
+        return;
+    }
+    postorder(root->left);
+    postorder(root->right);
+    printf("%d ", root->data);
+}
+
+// Function to search for a value in the BST
+struct Tree* search(struct Tree* root, int key) {
+    if (root == NULL || root->data == key) {
+        return root;
+    }
+
+    if (key < root->data) {
+        return search(root->left, key);
+    } else {
+        return search(root->right, key);
+    }
+    
+    // Return NULL if the key is not found
+    return NULL;
+}
+
+// Function to find the smallest element in the BST
+int findSmallest(struct Tree* root) {
+    while (root->left != NULL) {
+        root = root->left;
+    }
+    return root->data;
+}
+
+// Function to find the largest element in the BST
+int findLargest(struct Tree* root) {
+    while (root->right != NULL) {
+        root = root->right;
+    }
+    return root->data;
+}
+
+// Function to count the total nodes in the BST
+int countNodes(struct Tree* root) {
+    if (root == NULL) {
+        return 0;
+    }
+    return 1 + countNodes(root->left) + countNodes(root->right);
+}
+
+// Function to count the total internal nodes in the BST
+int countInternalNodes(struct Tree* root) {
+    if (root == NULL || (root->left == NULL && root->right == NULL)) {
+        return 0;
+    }
+    return 1 + countInternalNodes(root->left) + countInternalNodes(root->right);
+}
+
+// Function to count the total external nodes (leaves) in the BST
+int countExternalNodes(struct Tree* root) {
+    if (root == NULL) {
+        return 0;
+    }
+    if (root->left == NULL && root->right == NULL) {
+        return 1;
+    }
+    return countExternalNodes(root->left) + countExternalNodes(root->right);
+}
+
+int main() {
+    struct Tree* root = NULL;
+
+    // Insert elements into the BST
+    root = insert(root, 30);
+    root = insert(root, 20);
+    root = insert(root, 10);
+    root = insert(root, 40);
+    root = insert(root, 50);
+    root = insert(root, 25);
+    root = insert(root, 35);
+
+    printf("Inorder traversal: ");
+    inorder(root);
+    printf("\n");
+
+    printf("Preorder traversal: ");
+    preorder(root);
+    printf("\n");
+
+    printf("Postorder traversal: ");
+    postorder(root);
+    printf("\n");
+
+    int searchKey = 40;
+    struct Tree* result = search(root, searchKey);
+    if (result != NULL) {
+        printf("%d found in the BST.\n", searchKey);
+    } else {
+        printf("%d not found in the BST.\n", searchKey);
+    }
+
+    printf("Smallest element: %d\n", findSmallest(root));
+    printf("Largest element: %d\n", findLargest(root));
+
+    printf("Total nodes: %d\n", countNodes(root));
+    printf("Total internal nodes: %d\n", countInternalNodes(root));
+    printf("Total external nodes (leaves): %d\n", countExternalNodes(root));
+
+    return 0;
+}
